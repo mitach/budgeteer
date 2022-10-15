@@ -1,0 +1,1 @@
+{"version":3,"file":"dashboard.bundle.js","mappings":";;;;;AAAA,wB","sources":["webpack://budgeteer/./dashboard.js"],"sourcesContent":["alert('dashboard page');"],"names":[],"sourceRoot":""}
