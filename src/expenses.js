@@ -1,10 +1,11 @@
 import { getData, setData } from './localStorageActions';
 import { e, tr, td, categories, months, button, getId } from './util';
 
-let editMode = false;
-let currentId = null;
 
 const expensesData = getData();
+
+let editMode = false;
+let currentId = null;
 
 const form = document.getElementById('new-expense');
 const tbody = document.querySelector('tbody');
@@ -14,7 +15,7 @@ form.addEventListener('submit', onSubmit);
 form.querySelector('[type="reset"]').addEventListener('click', (event) => {
     editMode = false;
     currentId = null;
-})
+});
 
 tbody.addEventListener('click', onActionClick);
 
@@ -42,7 +43,6 @@ function onSubmit(event) {
         id,
         ...data
     }
-
     
     const expenseRow = createExpenseRow(record);
     
@@ -51,7 +51,6 @@ function onSubmit(event) {
         tbody.replaceChild(expenseRow, oldRow);
         
         const i = expensesData.findIndex(x => x.id == expenseRow.id);
-        
         expensesData.splice(i, 1, record);
 
         editMode = false;
