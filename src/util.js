@@ -26,8 +26,13 @@ export function e(type, attributes, ...content) {
 
 export const tr = e.bind(null, 'tr', {});
 export const td = e.bind(null, 'td', {});
-export const button = e.bind(null, 'button', {});
 
 export const categories = ['Other', 'Utilities', 'Groceries', 'Entertainment', 'Transport'];
 
 export const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+export function getId() {
+    return ('00000000' + (Math.random() * 99999999 | 0).toString(16)).slice(-8);
+}
+
+window.getId = getId;
