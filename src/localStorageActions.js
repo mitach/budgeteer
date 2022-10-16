@@ -1,9 +1,9 @@
 // Expenses
-export function setData(data) {
+export function setExpensesData(data) {
     localStorage.setItem('records', JSON.stringify(data));
 }
 
-export function getData() {
+export function getExpensesData() {
     const data = JSON.parse(localStorage.getItem('records'));
 
     const result = sortDataByDate(data);

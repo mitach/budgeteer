@@ -1,8 +1,8 @@
-import { getData, setData } from './localStorageActions';
+import { getExpensesData, setExpensesData } from './localStorageActions';
 import { e, tr, td, categories, months, button, getId } from './util';
 
 
-const expensesData = getData();
+const expensesData = getExpensesData();
 
 let editMode = false;
 let currentId = null;
@@ -63,7 +63,7 @@ function onSubmit(event) {
     form.reset();
     dateInput.value = data.date;
 
-    setData(expensesData);
+    setExpensesData(expensesData);
 }
 
 function createExpenseRow(record) {
@@ -102,7 +102,7 @@ function deleteRecord(row) {
         row.remove();
         const i = expensesData.findIndex(x => x.id == row.id);
         expensesData.splice(i, 1);
-        setData(expensesData);
+        setExpensesData(expensesData);
     }
 }
 
