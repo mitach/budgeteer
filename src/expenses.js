@@ -37,11 +37,17 @@ function onSubmit(event) {
         return;
     }
 
+    const parsedDate = new Date(data.date);
+    const _month = months[parsedDate.getMonth()];
+    const _catName = categories[data.category];
+
     const id = editMode ? currentId : getId();
 
     const record = {
         id,
-        ...data
+        _month,
+        _catName,
+        ...data,
     }
     
     const expenseRow = createExpenseRow(record);

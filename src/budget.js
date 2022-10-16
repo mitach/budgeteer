@@ -36,9 +36,12 @@ function onSubmit(event) {
     }
 
     const id = editMode ? currentId : getId();
+    const parsedMonth = parseInt(data.month.slice(0, 2), 10) - 1;
+    const _month = months[parsedMonth];
 
     const record = {
         id,
+        _month,
         ...data
     }
 
