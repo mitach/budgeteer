@@ -1,5 +1,5 @@
 import { getBudgetData, getExpensesData } from "./localStorageActions"
-import { e, months, summaryRow } from "./util";
+import { e, months, summaryTBodyRow, summaryTFootRow } from "./util";
 
 const monthsBlock = document.querySelector('.months');
 const tbody = document.querySelector('tbody');
@@ -10,7 +10,7 @@ document.querySelector('.prev').addEventListener('click', onPrevBtn);
 
 init();
 
-function onNextBtn(e) {
+function onNextBtn() {
     const lastMonth = monthsBlock.children[3].textContent;
     const i = months.indexOf(lastMonth);
 
@@ -43,6 +43,7 @@ function onPrevBtn() {
 
 function init() {
     const expensesData = getExpensesData();
+    const budgetData = getBudgetData();
 
     const firstMonth = monthsBlock.children[1].textContent;
     const secondMonth = monthsBlock.children[2].textContent;
@@ -61,8 +62,6 @@ function init() {
         s: 0,
         t: 0,
     }
-
-    const budgetData = getBudgetData();
 
     const fBudgetData = budgetData.find(x => x._month == firstMonth);
     const sBudgetData = budgetData.find(x => x._month == secondMonth);
@@ -117,54 +116,47 @@ function init() {
 }
 
 function createTableBody(fData, sData, tData) {
-    const utilitiesRow = summaryRow('Utilities', fData, sData, tData);
+    const utilitiesRow = summaryTBodyRow('Utilities', fData, sData, tData);
 
-    const groceriesRow = summaryRow('Groceries', fData, sData, tData);
+    const groceriesRow = summaryTBodyRow('Groceries', fData, sData, tData);
 
-    const entertainmentRow = summaryRow('Entertainment', fData, sData, tData);
+    const entertainmentRow = summaryTBodyRow('Entertainment', fData, sData, tData);
 
-    const transportRow = summaryRow('Transport', fData, sData, tData);
+    const transportRow = summaryTBodyRow('Transport', fData, sData, tData);
 
-    const otherRow = summaryRow('Other', fData, sData, tData);
+    const otherRow = summaryTBodyRow('Other', fData, sData, tData);
     
     return [utilitiesRow, groceriesRow, entertainmentRow, transportRow, otherRow];
 }
 
 function createTableFoot(totalSpent, budgets, savings) {
-    const totalSpentSum = totalSpent.f + totalSpent.s + totalSpent.t;
+    const overrunObj = {
+        f: budgets.f > totalSpent.f ? '0' : `${totalSpent.f - budgets.f}`,
+        s: budgets.s > totalSpent.s ? '0' : `${totalSpent.s - budgets.s}`,
+        t: budgets.t > totalSpent.t ? '0' : `${totalSpent.t - budgets.t}`,
+    }
 
-    const fOverrun = budgets.f > totalSpent.f ? '0' : `${totalSpent.f - budgets.f}`;
-    const sOverrun = budgets.s > totalSpent.s ? '0' : `${totalSpent.s - budgets.s}`;
-    const tOverrun = budgets.t > totalSpent.t ? '0' : `${totalSpent.t - budgets.t}`;
-    const totatOverrun = Number(fOverrun) + Number(sOverrun) + Number(tOverrun);
+    const savingsObj = {
+        fOverrun: budgets.f > totalSpent.f ? '0' : `${totalSpent.f - budgets.f}`,
+        sOverrun: budgets.s > totalSpent.s ? '0' : `${totalSpent.s - budgets.s}`,
+        tOverrun: budgets.t > totalSpent.t ? '0' : `${totalSpent.t - budgets.t}`,
+        f: function() {
+            return Number(this.fOverrun) ? savings.f - this.fOverrun : savings.f;
+        },
+        s() {
+            return Number(this.sOverrun) ? savings.s - this.sOverrun : savings.s;
+        },
+        
+        t() {
+            return Number(this.tOverrun) ? savings.t - this.tOverrun : savings.t;
+        } 
+    }
 
-    const fSavings = Number(fOverrun) ? savings.f - fOverrun : savings.f;
-    const sSavings = Number(sOverrun) ? savings.s - sOverrun : savings.s;
-    const tSavings = Number(tOverrun) ? savings.t - tOverrun : savings.t;
-
-    const totalSpentRow = e('tr', {className: 'total'},
-        e('th', {}, 'Total Spent'),
-        e('td', {}, e('span', {className: 'currency'}, totalSpent.f)),
-        e('td', {}, e('span', {className: 'currency'}, totalSpent.s)),
-        e('td', {}, e('span', {className: 'currency'}, totalSpent.t)),
-        e('th', {}, e('span', {className: 'currency'}, totalSpentSum)),
-    );
-
-    const budgetOverrunsRow = e('tr', {className: 'overrun'},
-        e('th', {}, 'Budget Overruns'),
-        e('td', {}, e('span', {className: 'currency'}, fOverrun)),
-        e('td', {}, e('span', {className: 'currency'}, sOverrun)),
-        e('td', {}, e('span', {className: 'currency'}, tOverrun)),
-        e('th', {}, e('span', {className: 'currency'},totatOverrun )),
-    );
+    const totalSpentRow = summaryTFootRow('Total Spent', 'total', totalSpent);
     
-    const savingsRow = e('tr', {className: 'savings'},
-        e('th', {}, 'Savings'),
-        e('td', {}, e('span', {className: 'currency'}, fSavings)),
-        e('td', {}, e('span', {className: 'currency'}, sSavings)),
-        e('td', {}, e('span', {className: 'currency'}, tSavings)),
-        e('th', {}, e('span', {className: 'currency'}, fSavings + sSavings + tSavings)),
-    );
+    const budgetOverrunsRow = summaryTFootRow('Budget Overruns', 'overrun', overrunObj);
+
+    const savingsRow = summaryTFootRow('Savings', 'savings', savingsObj);
    
 
     return [totalSpentRow, budgetOverrunsRow, savingsRow];

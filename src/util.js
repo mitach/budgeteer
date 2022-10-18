@@ -1,10 +1,8 @@
 /**
- * 
  * @param {string} type 
  * @param {Object} attributes 
  * @param  {...(string|Node)} content 
  * @returns {HTMLElement}
- * 
  */
 export function e(type, attributes, ...content) {
     const result = document.createElement(type);
@@ -27,7 +25,7 @@ export function e(type, attributes, ...content) {
 export const tr = e.bind(null, 'tr', {});
 export const td = e.bind(null, 'td', {});
 
-export const summaryRow = function(rowName, fData, sData, tData) {
+export const summaryTBodyRow = function(rowName, fData, sData, tData) {
     const id = rowName.toLowerCase();
 
     const totalSum = (fData[rowName] || 0) + (sData[rowName] || 0) + (tData[rowName] || 0);
@@ -38,6 +36,26 @@ export const summaryRow = function(rowName, fData, sData, tData) {
     e('td', {}, e('span', {className: 'currency'}, sData[rowName] || 0)),
     e('td', {}, e('span', {className: 'currency'}, tData[rowName] || 0)),
     e('th', {}, e('span', {className: 'currency'}, totalSum)),
+    );
+
+    return result;
+}
+
+export const summaryTFootRow = function(name, className, obj) {
+    const totalSum = () => {
+        if (typeof(obj.f) == 'function') {
+            return Number(obj.f()) + Number(obj.s()) + Number(obj.t());
+        } else {
+            return Number(obj.f) + Number(obj.s) + Number(obj.t);
+        }
+    } 
+
+    const result = e('tr', {className},
+        e('th', {}, name),
+        e('td', {}, e('span', {className: 'currency'}, typeof(obj.f) == 'function' ?  obj.f() : obj.f )),
+        e('td', {}, e('span', {className: 'currency'}, typeof(obj.s) == 'function' ?  obj.s() : obj.s )),
+        e('td', {}, e('span', {className: 'currency'}, typeof(obj.t) == 'function' ?  obj.t() : obj.t )),
+        e('th', {}, e('span', {className: 'currency'}, totalSum())),
     );
 
     return result;
