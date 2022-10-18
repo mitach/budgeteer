@@ -1,5 +1,5 @@
 import { getBudgetData, getExpensesData } from "./localStorageActions"
-import { e, months } from "./util";
+import { e, months, summaryRow } from "./util";
 
 const monthsBlock = document.querySelector('.months');
 const tbody = document.querySelector('tbody');
@@ -117,45 +117,15 @@ function init() {
 }
 
 function createTableBody(fData, sData, tData) {
-    const utilitiesRow = e('tr', {id: 'utilities'},
-    e('th', {}, 'Utilities'),
-    e('td', {}, e('span', {className: 'currency'}, fData.Utilities || 0)),
-    e('td', {}, e('span', {className: 'currency'}, sData.Utilities || 0)),
-    e('td', {}, e('span', {className: 'currency'}, tData.Utilities || 0)),
-    e('th', {}, e('span', {className: 'currency'}, `${((fData.Utilities || 0) + (sData.Utilities || 0) + (tData.Utilities || 0))}`)),
-    );
+    const utilitiesRow = summaryRow('Utilities', fData, sData, tData);
 
-    const groceriesRow = e('tr', {id: 'groceries'},
-    e('th', {}, 'Groceries'),
-    e('td', {}, e('span', {className: 'currency'}, fData.Groceries || 0)),
-    e('td', {}, e('span', {className: 'currency'}, sData.Groceries || 0)),
-    e('td', {}, e('span', {className: 'currency'}, tData.Groceries || 0)),
-    e('th', {}, e('span', {className: 'currency'}, `${((fData.Groceries || 0) + (sData.Groceries || 0) + (tData.Groceries || 0))}`)),
-    );
+    const groceriesRow = summaryRow('Groceries', fData, sData, tData);
 
-    const entertainmentRow = e('tr', {id: 'entertainment'},
-    e('th', {}, 'Entertainment'),
-    e('td', {}, e('span', {className: 'currency'}, fData.Entertainment || 0)),
-    e('td', {}, e('span', {className: 'currency'}, sData.Entertainment || 0)),
-    e('td', {}, e('span', {className: 'currency'}, tData.Entertainment || 0)),
-    e('th', {}, e('span', {className: 'currency'}, `${((fData.Entertainment || 0) + (sData.Entertainment || 0) + (tData.Entertainment || 0))}`)),
-    );
+    const entertainmentRow = summaryRow('Entertainment', fData, sData, tData);
 
-    const transportRow = e('tr', {id: 'transport'},
-    e('th', {}, 'Transport'),
-    e('td', {}, e('span', {className: 'currency'}, fData.Transport || 0)),
-    e('td', {}, e('span', {className: 'currency'}, sData.Transport || 0)),
-    e('td', {}, e('span', {className: 'currency'}, tData.Transport || 0)),
-    e('th', {}, e('span', {className: 'currency'}, `${((fData.Transport || 0) + (sData.Transport || 0) + (tData.Transport || 0))}`)),
-    );
+    const transportRow = summaryRow('Transport', fData, sData, tData);
 
-    const otherRow = e('tr', {id: 'other'},
-        e('th', {}, 'Other'),
-        e('td', {}, e('span', {className: 'currency'}, fData.Other || 0)),
-        e('td', {}, e('span', {className: 'currency'}, sData.Other || 0)),
-        e('td', {}, e('span', {className: 'currency'}, tData.Other || 0)),
-        e('th', {}, e('span', {className: 'currency'}, `${((fData.Other || 0) + (sData.Other || 0) + (tData.Other || 0))}`)),
-    );
+    const otherRow = summaryRow('Other', fData, sData, tData);
     
     return [utilitiesRow, groceriesRow, entertainmentRow, transportRow, otherRow];
 }

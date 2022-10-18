@@ -1,8 +1,12 @@
-import { getExpensesData, setExpensesData } from './localStorageActions';
-import { e, tr, td, categories, months, button, getId } from './util';
+import {
+    getExpensesData,
+    setExpensesData,
+    getExpensesDataSortedByDate,
+    getExpensesDataSortedByAmount } from './localStorageActions';
+import { e, tr, td, categories, months, getId } from './util';
 
 
-const expensesData = getExpensesData();
+let expensesData = getExpensesData();
 
 let editMode = false;
 let currentId = null;
@@ -15,6 +19,22 @@ form.addEventListener('submit', onSubmit);
 form.querySelector('[type="reset"]').addEventListener('click', (event) => {
     editMode = false;
     currentId = null;
+});
+
+document.querySelector('.sort-by-date').addEventListener('click', () => {
+     expensesData = getExpensesDataSortedByDate();
+
+     const rows = expensesData.map(createExpenseRow);
+
+    tbody.replaceChildren(...rows);
+});
+
+document.querySelector('.sort-by-amount').addEventListener('click', () => {
+    expensesData = getExpensesDataSortedByAmount();
+
+    const rows = expensesData.map(createExpenseRow);
+
+   tbody.replaceChildren(...rows);
 });
 
 tbody.addEventListener('click', onActionClick);
@@ -63,7 +83,7 @@ function onSubmit(event) {
         currentId = null;
     } else {
         expensesData.push(record);
-        tbody.prepend(expenseRow);
+        tbody.append(expenseRow);
     }
 
     form.reset();

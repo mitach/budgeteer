@@ -4,14 +4,24 @@ export function setExpensesData(data) {
 }
 
 export function getExpensesData() {
+    return JSON.parse(localStorage.getItem('records'));
+}
+
+export function getExpensesDataSortedByDate() {
     const data = JSON.parse(localStorage.getItem('records'));
 
     const result = sortDataByDate(data);
-    // const result = sortDataByAmount(data);
 
     return result;
 }
 
+export function getExpensesDataSortedByAmount() {
+    const data = JSON.parse(localStorage.getItem('records'));
+
+    const result = sortDataByAmount(data);
+
+    return result;
+}
 
 // Budget
 export function setBudgetData(data) {
